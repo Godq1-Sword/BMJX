@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.gdq.dao.ClockHistoryDao">
+
+    <resultMap id="clockHistoryMap" type="pri.gdq.po.ClockHistoryPO">
+        <id column="id" property="id"/>
+        <id column="username" property="username"/>
+        <id column="start_time" property="startTime"/>
+        <id column="end_time" property="endTime"/>
+        <id column="date_time" property="dateTime"/>
+    </resultMap>
+
+    <insert id="insertClockHistory" parameterType="pri.gdq.po.ClockHistoryPO">
+        insert into t_clock_history(id, username, start_time, end_time, date_time, work_time)
+        values (#{id}, #{username}, #{startTime}, #{endTime}, #{dateTime}, #{workTime})
+    </insert>
+
+    <select id="selectClockHistoryList" parameterType="Map" resultMap="clockHistoryMap">
+        select *
+        from t_clock_history
+        where 1=1
+        <if test="id!=null and ''!=id">
+            and id = #{id}
+        </if>
+        <if test="username!=null and ''!=username">
+            and username = #{username}
+        </if>
+        <if test="startTime!=null">
+            and start_time = #{startTime}
+        </if>
+        <if test="endTime!=null">
+            and end_time = #{endTime}
+        </if>
+        <if test="dateTime!=null">
+            and date_time = #{dateTime}
+        </if>
+        <if test="workTime!=null and ''!=workTime">
+            and work_time = #{workTime}
+        </if>
+    </select>
+
+    <update id="updateClockHistory" parameterType="pri.gdq.po.ClockHistoryPO">
+        update t_clock_history
+        <set>
+            <if test="username!=null and ''!=username">
+                username = #{username},
+            </if>
+            <if test="startTime!=null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime!=null">
+                end_Time = #{endTime},
+            </if>
+            <if test="dateTime!=null">
+                date_time = #{dateTime},
+            </if>
+            <if test="workTime!=null and ''!=workTime">
+                work_time = #{workTime}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <select id="selectExportTime" parameterType="Map" resultType="Map">
+        select SUM(work_time) / COUNT(work_time != 0 or null) AS avgWorkTime,
+               count(*)                                       AS workTotalDay,
+               COUNT(work_time != 0 or null)                  AS workRealDay
+        from t_clock_history
+        where username = #{username}
+          and date_time &gt; #{startTime}
+          and date_time &lt; #{endTime}
+    </select>
+
+    <select id="selectWorkTimeAndPercent" parameterType="Map" resultType="Map">
+        select SUM(work_time) / COUNT(work_time != 0 or null) as avgWorkTime,
+        count(work_time!=0 or null) / count(*) as percentAge
+        from t_clock_history
+        where 1=1
+        <if test="username!=null and ''!=username">
+            and username = #{username}
+        </if>
+        <if test="historyDays!=null and ''!=historyDays">
+            and DATEDIFF(NOW(),date_time) &lt; #{historyDays}
+        </if>
+    </select>
+
+    <select id="selectClockUsernames" parameterType="java.sql.Date" resultType="String">
+        select username
+        from t_clock_history
+        where date_time = #{dateTime}
+    </select>
+</mapper>

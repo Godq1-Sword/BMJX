@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.gdq.dao.MessageTipDao">
+
+    <resultMap id="messageTipMap" type="pri.gdq.po.MessageTipPO">
+        <id column="id" property="id"/>
+        <id column="behavior_type" property="behaviorType"/>
+        <id column="username" property="username"/>
+        <id column="create_time" property="createTime"/>
+        <id column="date_time" property="dateTime"/>
+        <id column="content" property="content"/>
+        <id column="miss_type" property="missType"/>
+        <id column="bad_history_id" property="badHistoryId"/>
+    </resultMap>
+
+    <insert id="insertMessageTip" parameterType="pri.gdq.po.MessageTipPO">
+        insert into t_message_tip(id, behavior_type, username, create_time, date_time, content, miss_type,
+                                  bad_history_id)
+        values (#{id}, #{behaviorType}, #{username}, #{createTime}, #{dateTime}, #{content}, #{missType},
+                #{badHistoryId})
+    </insert>
+
+    <select id="selectMessageTipList" parameterType="Map" resultMap="messageTipMap">
+        select *
+        from t_message_tip
+        where 1=1
+        <if test="id!=null and ''!=id">
+            and id = #{id}
+        </if>
+        <if test="behaviorType!=null and ''!=behaviorType">
+            and username = #{behaviorType}
+        </if>
+        <if test="username!=null and ''!=username">
+            and username = #{username}
+        </if>
+        <if test="createTime!=null">
+            and create_time = #{createTime}
+        </if>
+        <if test="dateTime!=null">
+            and date_time = #{dateTime}
+        </if>
+        <if test="content!=null and ''!=content">
+            and content = #{content}
+        </if>
+        <if test="missType!=null and ''!=missType">
+            and miss_type = #{missType}
+        </if>
+        <if test="badHistoryId!=null and ''!=badHistoryId">
+            and bad_history_id = #{badHistoryId}
+        </if>
+    </select>
+
+    <select id="selectMessageTipAmount" parameterType="String" resultType="int">
+        select count(*)
+        from t_message_tip
+        where username = #{username}
+    </select>
+
+    <delete id="deleteMessageTip" parameterType="Map">
+        delete
+        from t_message_tip
+        where 1=1
+        <if test="id!=null and ''!=id">
+            and id = #{id}
+        </if>
+        <if test="behaviorType!=null and ''!=behaviorType">
+            and username = #{behaviorType}
+        </if>
+        <if test="username!=null and ''!=username">
+            and username = #{username}
+        </if>
+        <if test="createTime!=null">
+            and create_time = #{createTime}
+        </if>
+        <if test="dateTime!=null">
+            and date_time = #{dateTime}
+        </if>
+        <if test="content!=null and ''!=content">
+            and content = #{content}
+        </if>
+        <if test="missType!=null and ''!=missType">
+            and miss_type = #{missType}
+        </if>
+        <if test="badHistoryId!=null and ''!=badHistoryId">
+            and bad_history_id = #{badHistoryId}
+        </if>
+    </delete>
+</mapper>

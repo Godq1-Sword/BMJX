@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.gdq.dao.BadHistoryDao">
+
+    <resultMap id="badHistoryMap" type="pri.gdq.po.BadHistoryPO">
+        <id column="id" property="id"/>
+        <id column="clock_time" property="clockTime"/>
+        <id column="over_time" property="overTime"/>
+        <id column="behavior_type" property="behaviorType"/>
+        <id column="username" property="username"/>
+        <id column="date_time" property="dateTime"/>
+        <id column="back_type" property="backType"/>
+        <id column="miss_type" property="missType"/>
+    </resultMap>
+
+    <insert id="insertBadHistory" parameterType="pri.gdq.po.BadHistoryPO">
+        insert into t_bad_history(id, username, clock_time, over_time, behavior_type, date_time, back_type, miss_type)
+        values (#{id}, #{username}, #{clockTime}, #{overTime}, #{behaviorType}, #{dateTime}, #{backType}, #{missType})
+    </insert>
+
+    <select id="selectBadHistoryList" parameterType="Map" resultMap="badHistoryMap">
+        select *
+        from t_bad_history
+        where 1=1
+        <if test="id!=null and ''!=id">
+            and id = #{id}
+        </if>
+        <if test="username!=null and ''!=username">
+            and username = #{username}
+        </if>
+        <if test="clockTime!=null">
+            and clock_time = #{clockTime}
+        </if>
+        <if test="overTime!=null">
+            and over_time = #{overTime}
+        </if>
+        <if test="dateTime!=null">
+            and date_time = #{dateTime}
+        </if>
+        <if test="behaviorType!=null and ''!=behaviorType">
+            and behavior_type = #{behaviorType}
+        </if>
+        <if test="backType!=null and ''!=backType">
+            and back_type = #{backType}
+        </if>
+        <if test="missType!=null and ''!=missType">
+            and miss_type = #{missType}
+        </if>
+        <if test="historyDays!=null and ''!=historyDays">
+            and DATEDIFF(NOW(),date_time) &lt; #{historyDays}
+        </if>
+    </select>
+
+    <select id="selectBadHistoryById" parameterType="String" resultMap="badHistoryMap">
+        select *
+        from t_bad_history
+        where id = #{id}
+    </select>
+
+    <select id="selectBadHistoryCount" parameterType="Map" resultType="Map">
+        select COUNT(behavior_type = 0 or null) AS lateCount,
+               COUNT(behavior_type = 1 or null) AS earlyCount,
+               COUNT(behavior_type = 2 or null) AS missCount,
+               COUNT(behavior_type = 3 or null) AS absentCount
+        from t_bad_history
+        where username = #{username}
+          and date_time &gt; #{startTime}
+          and date_time &lt; #{endTime}
+    </select>
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.gdq.dao.UserDetailDao">
+
+    <resultMap id="userDetailMap" type="pri.gdq.po.UserDetailPO">
+        <id column="username" property="username"/>
+        <id column="name" property="name"/>
+        <id column="pid" property="pid"/>
+        <id column="level" property="level"/>
+    </resultMap>
+
+    <insert id="insertUserDetail" parameterType="pri.gdq.po.UserDetailPO">
+        insert into t_user_detail(username, name, pid, level)
+        values (#{username}, #{name}, #{pid}, #{level})
+    </insert>
+
+    <select id="selectUserDetailList" parameterType="Map" resultMap="userDetailMap">
+        select *
+        from t_user_detail
+        where 1=1
+        <if test="username!=null and ''!=username">
+            and username = #{username}
+        </if>
+        <if test="name!=null and ''!=name">
+            and name = #{name}
+        </if>
+        <if test="pid!=null and ''!=pid">
+            and pid = #{pid}
+        </if>
+        <if test="level!=null and ''!=level">
+            and level = #{level}
+        </if>
+    </select>
+
+    <select id="selectUserDetailListByPid" parameterType="String" resultMap="userDetailMap">
+        select *
+        from t_user_detail
+        where pid = #{username}
+    </select>
+
+    <select id="selectUserDetailByUsername" parameterType="String" resultMap="userDetailMap">
+        select *
+        from t_user_detail
+        where username = #{username}
+    </select>
+
+    <select id="selectUsernames" resultType="String">
+        select username
+        from t_user_detail
+    </select>
+
+    <update id="updateUserDetail" parameterType="pri.gdq.po.UserDetailPO">
+        update t_user_detail
+        set name = #{name}
+        where username = #{username}
+    </update>
+</mapper>

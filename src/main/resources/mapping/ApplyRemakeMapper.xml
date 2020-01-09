@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.gdq.dao.ApplyRemakeDao">
+
+    <resultMap id="applyRemakeMap" type="pri.gdq.po.ApplyRemakePO">
+        <id column="id" property="id"/>
+        <id column="username" property="username"/>
+        <id column="name" property="name"/>
+        <id column="apply_type" property="applyType"/>
+        <id column="apply_reason" property="applyReason"/>
+        <id column="apply_username" property="applyUsername"/>
+        <id column="create_time" property="createTime"/>
+        <id column="bad_history_id" property="badHistoryId"/>
+    </resultMap>
+
+    <insert id="insertApplyRemake" parameterType="pri.gdq.po.ApplyRemakePO">
+        insert into t_apply_remake(id, username, name, apply_type, apply_reason, apply_username, create_time,
+                                   bad_history_id)
+        values (#{id}, #{username}, #{name}, #{applyType}, #{applyReason}, #{applyUsername}, #{createTime},
+                #{badHistoryId})
+    </insert>
+
+    <select id="selectApplyRemakeList" parameterType="Map" resultMap="applyRemakeMap">
+        select *
+        from t_apply_remake
+        where 1=1
+        <if test="id!=null and ''!=id">
+            and id = #{id}
+        </if>
+        <if test="username!=null and ''!=username">
+            and username = #{username}
+        </if>
+        <if test="name!=null and ''!=name">
+            and name = #{name}
+        </if>
+        <if test="applyType!=null and ''!=applyType">
+            and apply_type = #{applyType}
+        </if>
+        <if test="applyReason!=null and ''!=applyReason">
+            and apply_reason = #{applyReason}
+        </if>
+        <if test="applyUsername!=null and ''!=applyUsername">
+            and apply_username = #{applyUsername}
+        </if>
+        <if test="createTime!=null">
+            and create_time = #{createTime}
+        </if>
+        <if test="badHistoryId!=null and ''!=badHistoryId">
+            and bad_history_id = #{badHistoryId}
+        </if>
+    </select>
+
+    <select id="selectApplyRemakeById" parameterType="String" resultMap="applyRemakeMap">
+        select *
+        from t_apply_remake
+        where id = #{id}
+    </select>
+
+    <select id="selectApplyRemakeCount" parameterType="Map" resultType="Map">
+        select COUNT(apply_type = 3 or null) AS backCardCount,
+               COUNT(apply_type = 4 or null) AS backHolidayCount
+        from t_apply_remake
+        where username = #{username}
+          and create_time &gt; #{startTime}
+          and create_time &lt; #{endTime}
+    </select>
+</mapper>

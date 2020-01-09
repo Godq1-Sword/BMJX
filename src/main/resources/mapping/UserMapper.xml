@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.gdq.dao.UserDao">
+
+    <resultMap id="userMap" type="pri.gdq.po.UserPO">
+        <id column="username" property="username"/>
+        <id column="password" property="password"/>
+        <id column="role" property="role"/>
+        <id column="account_expires" property="accountExpires"/>
+        <id column="credentials_expires" property="credentialsExpires"/>
+        <id column="lock_flag" property="lockFlag"/>
+    </resultMap>
+    <select id="selectUser" parameterType="String" resultMap="userMap">
+        select *
+        from t_user
+        where username = #{username}
+    </select>
+    <select id="selectUserList" resultMap="userMap">
+        select *
+        from t_user
+    </select>
+</mapper>

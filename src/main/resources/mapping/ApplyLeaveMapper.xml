@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.gdq.dao.ApplyLeaveDao">
+
+    <resultMap id="applyLeaveMap" type="pri.gdq.po.ApplyLeavePO">
+        <id column="id" property="id"/>
+        <id column="username" property="username"/>
+        <id column="name" property="name"/>
+        <id column="start_time" property="startTime"/>
+        <id column="end_time" property="endTime"/>
+        <id column="apply_type" property="applyType"/>
+        <id column="apply_reason" property="applyReason"/>
+        <id column="file_path" property="filePath"/>
+        <id column="apply_username" property="applyUsername"/>
+        <id column="holiday_type" property="holidayType"/>
+        <id column="trip_site" property="tripSite"/>
+        <id column="create_time" property="createTime"/>
+        <id column="apply_time" property="applyTime"/>
+        <id column="apply_name" property="applyName"/>
+    </resultMap>
+
+    <insert id="insertApplyLeave" parameterType="pri.gdq.po.ApplyLeavePO">
+        insert into t_apply_leave(id, username, name, start_time, end_time, apply_type, apply_reason, file_path,
+                                  apply_username, holiday_type, trip_site, create_time, apply_time, apply_name)
+        values (#{id}, #{username}, #{name}, #{startTime}, #{endTime}, #{applyType}, #{applyReason}, #{filePath},
+                #{applyUsername}, #{holidayType}, #{tripSite}, #{createTime}, #{applyTime}, #{applyName})
+    </insert>
+
+    <select id="selectApplyLeaveList" parameterType="Map" resultMap="applyLeaveMap">
+        select *
+        from t_apply_leave
+        where 1=1
+        <if test="id!=null and ''!=id">
+            and id = #{id}
+        </if>
+        <if test="username!=null and ''!=username">
+            and username = #{username}
+        </if>
+        <if test="name!=null and ''!=name">
+            and name = #{name}
+        </if>
+        <if test="applyType!=null and ''!=applyType">
+            and apply_type = #{applyType}
+        </if>
+        <if test="applyTime!=null and ''!=applyTime">
+            and apply_time = #{applyTime}
+        </if>
+        <if test="startTime!=null">
+            and start_time &lt;= #{startTime}
+        </if>
+        <if test="endTime!=null">
+            and end_time &gt;= #{endTime}
+        </if>
+        <if test="applyReason!=null and ''!=applyReason">
+            and apply_reason = #{applyReason}
+        </if>
+        <if test="filePath!=null and ''!=filePath">
+            and file_path = #{filePath}
+        </if>
+        <if test="applyUsername!=null and ''!=applyUsername">
+            and apply_username = #{applyUsername}
+        </if>
+        <if test="holidayType!=null and ''!=holidayType">
+            and holiday_type = #{holidayType}
+        </if>
+        <if test="tripSite!=null and ''!=tripSite">
+            and trip_site = #{tripSite}
+        </if>
+        <if test="createTime!=null">
+            and create_time = #{createTime}
+        </if>
+        <if test="applyName!=null">
+            and apply_name = #{applyName}
+        </if>
+    </select>
+
+    <select id="selectApplyLeaveById" parameterType="String" resultMap="applyLeaveMap">
+        select *
+        from t_apply_leave
+        where id = #{id}
+    </select>
+
+    <select id="selectApplyLeaveCount" parameterType="Map" resultType="Map">
+        select COUNT(apply_type = 0 or null) AS leaveCount,
+               COUNT(apply_type = 1 or null) AS workCount,
+               COUNT(apply_type = 2 or null) AS businsessCount
+        from t_apply_leave
+        where username = #{username}
+          and start_time &gt; #{startTime}
+          and end_time &lt; #{endTime}
+    </select>
+
+    <select id="selectApplyLeave730" parameterType="Map" resultMap="applyLeaveMap">
+        select start_time,end_time
+        from t_apply_leave
+        where 1=1
+        <if test="historyDays!=null and ''!=historyDays">
+            and DATEDIFF(NOW(),start_time) &lt;= #{historyDays}
+        </if>
+    </select>
+</mapper>

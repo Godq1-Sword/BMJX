@@ -1,0 +1,51 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/taxoa?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: 747436
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
+  type-aliases-package: com.dwyd.pojo
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: G:/projects/taxoa-backend/log
+config:
+  common:
+    start-time: '08:00'
+    end-time: '17:00'
+    cron_absent: '0 0 0 ? 1-12 1/5'
+    ymh-pattern: 'yyyy-MM-dd'
+    hms-pattern: 'yyyy-MM-dd HH:mm:ss'
+    file-path: "D:/"
+    behavior-late: '0'
+    behavior-early: '1'
+    behavior-miss: '2'
+    behavior-absent: '3'
+    miss-not: '-1'
+    miss-clock-in: '0'
+    miss-clock-out: '1'
+    back-not: '-1'
+    back-not-miss: '0'
+    back-miss: '1'
+    back-absent: '2'
+    back-not-absent: '3'
+    level-max: '1'
+    status-unread: '0'
+    status-pass: '1'
+    status-notPass: '2'
+    apply-leave: '0'
+    apply-work: '1'
+    apply-business: '2'
+    apply-back-card: '3'
+    apply-back_holiday: '4'
+    excel-file-path: 'c:/'
+    algorithm: HS256
+    iss: godq1
+    secret: 747436
+    expiration: 3600

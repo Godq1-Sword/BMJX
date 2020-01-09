@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.gdq.dao.ApplyTaskDao">
+
+    <resultMap id="applyTaskMap" type="pri.gdq.po.ApplyTaskPO">
+        <id column="id" property="id"/>
+        <id column="username" property="username"/>
+        <id column="name" property="name"/>
+        <id column="apply_username" property="applyUsername"/>
+        <id column="apply_name" property="applyName"/>
+        <id column="apply_id" property="applyId"/>
+        <id column="status" property="status"/>
+        <id column="apply_type" property="applyType"/>
+        <id column="apply_create_time" property="applyCreateTime"/>
+        <id column="update_time" property="updateTime"/>
+        <id column="suggest" property="suggest"/>
+    </resultMap>
+
+    <insert id="insertApplyTask" parameterType="pri.gdq.po.ApplyLeavePO">
+        insert into t_apply_task(id, username, apply_username, apply_name, apply_id, status,
+                                 apply_type, apply_create_time, suggest, update_time, name)
+        values (#{id}, #{username}, #{applyUsername}, #{applyName}, #{applyId}, #{status}, #{applyType},
+                #{applyCreateTime}, #{suggest}, #{updateTime}, #{name})
+    </insert>
+
+    <select id="selectApplyTaskList" parameterType="Map" resultMap="applyTaskMap">
+        select *
+        from t_apply_task
+        where 1=1
+        <if test="id!=null and ''!=id">
+            and id = #{id}
+        </if>
+        <if test="username!=null and ''!=username">
+            and username = #{username}
+        </if>
+        <if test="applyUsername!=null and ''!=applyUsername">
+            and apply_username = #{applyUsername}
+        </if>
+        <if test="applyName!=null and ''!=applyName">
+            and apply_name = #{applyName}
+        </if>
+        <if test="applyId!=null and ''!=applyId">
+            and apply_id = #{applyId}
+        </if>
+        <if test="status!=null">
+            and status = #{status}
+        </if>
+        <if test="applyType!=null and ''!=applyType">
+            and apply_type = #{applyType}
+        </if>
+        <if test="updateTime!=null and ''!=updateTime">
+            and update_time = #{updateTime}
+        </if>
+        <if test="applyCreateTime!=null">
+            and apply_create_time = #{applyCreateTime}
+        </if>
+        <if test="suggest!=null and ''!=suggest">
+            and suggest = #{suggest}
+        </if>
+        <if test="name!=null and ''!=name">
+            and name = #{name}
+        </if>
+    </select>
+
+    <update id="updateStatusById" parameterType="Map">
+        update t_apply_task
+        set status      = #{status},
+            update_time = #{updateTime},
+            suggest     = #{suggest}
+        where id = #{taskId}
+    </update>
+
+    <select id="selectApplyTaskById" parameterType="String" resultMap="applyTaskMap">
+        select *
+        from t_apply_task
+        where id = #{id}
+    </select>
+</mapper>
